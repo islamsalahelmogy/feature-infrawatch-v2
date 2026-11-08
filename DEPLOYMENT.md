@@ -15,3 +15,7 @@ php artisan db:seed --class=IpRangesSeeder
 ```
 
 The import creates the Main Factory and inserts only rows that include a valid MAC address. It intentionally does not import spreadsheet usernames or passwords.
+
+## Phase 2 worker
+
+Set a long random `INFRAWATCH_WORKER_TOKEN` in Laravel and the same value in the Windows Service environment for the Python worker. Assign either **Critical ICMP** or **Standard ICMP** to a device through the inventory form before it is eligible for collection. The worker polls only active devices with an active ICMP profile.

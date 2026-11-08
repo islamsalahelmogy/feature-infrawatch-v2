@@ -1,0 +1,6 @@
+<section class="card" style="overflow:auto"><h2>Scheduled test log</h2><p class="muted">Open a test to review which devices responded at that time. Click a column heading to sort all tests.</p>
+<table><thead><tr><x-sort-heading column="id" label="Test"/><x-sort-heading column="schedule" label="Schedule"/><x-sort-heading column="started" label="Started (Cairo)"/><x-sort-heading column="state" label="State"/><x-sort-heading column="responded" label="Responded"/><x-sort-heading column="failed" label="No response"/><x-sort-heading column="pending" label="Pending"/><th>Report</th></tr></thead><tbody>
+@forelse($runs as $run)
+<tr><td>#{{ $run->id }}</td><td>{{ $run->schedule?->name ?? 'Deleted schedule' }}</td><td>{{ $run->started_at?->timezone('Africa/Cairo')->format('d M Y H:i:s') }}</td><td>{{ ucfirst($run->status) }}</td><td><span class="badge up">{{ $run->responded_count }}</span></td><td><span class="badge down">{{ $run->failed_count }}</span></td><td>{{ $run->pending_count }}</td><td><a class="button" href="{{ route('reports.run',$run) }}">View report</a></td></tr>
+@empty<tr><td colspan="8">No scheduled tests yet. Results appear here when a scheduled test starts.</td></tr>@endforelse
+</tbody></table>{{ $runs->links() }}</section>

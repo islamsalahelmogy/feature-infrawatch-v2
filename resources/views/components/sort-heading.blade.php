@@ -1,0 +1,2 @@
+@props(['column', 'label', 'default' => ''])
+<th aria-sort="{{ request('sort', $default) === $column ? (request('direction', 'asc') === 'desc' ? 'descending' : 'ascending') : 'none' }}"><a style="color:inherit;text-decoration:none;white-space:nowrap" href="{{ request()->fullUrlWithQuery(['sort'=>$column,'direction'=>request('sort', $default)===$column && request('direction','asc')==='asc' ? 'desc':'asc','page'=>null]) }}">{{ $label }} {{ request('sort', $default)===$column ? (request('direction','asc')==='desc' ? '↓':'↑') : '↕' }}</a></th>

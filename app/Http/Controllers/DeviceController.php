@@ -16,9 +16,11 @@ class DeviceController extends Controller
     public function index(Request $request): View
     {
         $type = $request->string('type')->toString();
+        $columns = ['name'=>'devices.name','management_ip'=>'devices.management_ip','mac_address'=>'devices.mac_address','status'=>'devices.status','type'=>'device_types.name','site'=>'sites.name'];
         $devices = Device::with(['site', 'type', 'monitoringProfile'])
+            ->select('devices.*')->leftJoin('device_types','device_types.id','=','devices.device_type_id')->leftJoin('sites','sites.id','=','devices.site_id')
             ->when($type !== '', fn ($query) => $query->whereHas('type', fn ($typeQuery) => $typeQuery->where('slug', $type)))
-            ->latest()
+            ->orderBy($columns[$request->query('sort')] ?? 'devices.name', $request->query('direction') === 'desc' ? 'desc':'asc')->orderBy('devices.id')
             ->paginate(25)
             ->withQueryString();
 

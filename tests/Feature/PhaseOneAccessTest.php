@@ -67,6 +67,17 @@ class PhaseOneAccessTest extends TestCase
         $this->actingAs($user)->post('/devices', ['name' => 'Core', 'site_id' => $site->id, 'device_type_id' => $type->id, 'management_ip' => '192.168.1.10', 'ip_assignment' => 'static', 'criticality' => 'critical', 'is_active' => 1])->assertSessionHasErrors(['mac_address', 'default_gateway', 'subnet_mask']);
     }
 
+    public function test_operator_can_delete_a_device(): void
+    {
+        $user = $this->userWithRole('operator');
+        $site = Site::create(['name' => 'Factory 02', 'code' => 'F02', 'timezone' => 'Africa/Cairo']);
+        $type = DeviceType::create(['name' => 'Switch', 'slug' => 'switch', 'category' => 'network']);
+        $device = \App\Models\Device::create(['site_id' => $site->id, 'device_type_id' => $type->id, 'name' => 'Core', 'management_ip' => '192.168.1.10', 'mac_address' => '00:11:22:33:44:55', 'default_gateway' => '192.168.1.4', 'subnet_mask' => '255.255.248.0', 'ip_assignment' => 'static', 'criticality' => 'high']);
+
+        $this->actingAs($user)->delete("/devices/{$device->id}")->assertRedirect('/devices');
+        $this->assertDatabaseMissing('devices', ['id' => $device->id]);
+    }
+
     public function test_ip_range_seeder_imports_only_devices_with_verified_mac_addresses(): void
     {
         putenv('INFRAWATCH_MAIN_FACTORY_DEFAULT_GATEWAY=192.168.0.254');
